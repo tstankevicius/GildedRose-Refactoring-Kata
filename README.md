@@ -2,6 +2,14 @@ _Support this and all my katas via [Patreon](https://www.patreon.com/EmilyBache)
 
 # Gilded Rose Refactoring Kata
 
+## TypeScript submission
+
+The work in this fork is limited to the TypeScript implementation. See the
+[`TypeScript` submission README](TypeScript/README.md) for installation, build,
+run, test, design, and AI-assisted development notes. The refactoring decision
+record is in
+[`TypeScript/specs/refactoring-design.md`](TypeScript/specs/refactoring-design.md).
+
 You can find out more about this exercise in my YouTube video [Why Developers LOVE The Gilded Rose Kata](https://youtu.be/Mt4XpGxigT4). I also have a video of a worked solution in Java - [Gilded Rose Kata, Hands-on](https://youtu.be/OdnV8hc9L7I)
 
 I use this kata as part of my work as a technical coach. I wrote a lot about the coaching method I use in this book [Technical Agile Coaching with the Samman method](https://leanpub.com/techagilecoach). A while back I wrote this article ["Writing Good Tests for the Gilded Rose Kata"](http://coding-is-like-cooking.info/2013/03/writing-good-tests-for-the-gilded-rose-kata/) about how you could use this kata in a [coding dojo](https://leanpub.com/codingdojohandbook).
