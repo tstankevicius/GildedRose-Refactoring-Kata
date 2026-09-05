@@ -4,6 +4,7 @@ const AGED_BRIE = 'Aged Brie';
 const BACKSTAGE_PASS = 'Backstage passes to a TAFKAL80ETC concert';
 const CONJURED_ELIXIR = 'Conjured Elixir of the Mongoose';
 const CONJURED_MANA_CAKE = 'Conjured Mana Cake';
+const ITEM_CONTAINING_CONJURED = 'Ordinary Conjured Item';
 const ORDINARY_ITEM = 'Ordinary Item';
 const SULFURAS = 'Sulfuras, Hand of Ragnaros';
 
@@ -169,7 +170,7 @@ describe('Gilded Rose', () => {
   describe('Conjured items', () => {
     const cases: Array<UpdateCase & { itemName: string }> = [
       {
-        description: 'decrease in quality by two before the sell date',
+        description: 'decrease in quality by two before the sell-by date',
         itemName: CONJURED_MANA_CAKE,
         sellIn: 5,
         quality: 10,
@@ -177,7 +178,7 @@ describe('Gilded Rose', () => {
         expectedQuality: 8,
       },
       {
-        description: 'apply to any item whose name starts with Conjured',
+        description: 'follow the same rule across names with the Conjured prefix',
         itemName: CONJURED_ELIXIR,
         sellIn: 5,
         quality: 10,
@@ -185,7 +186,7 @@ describe('Gilded Rose', () => {
         expectedQuality: 8,
       },
       {
-        description: 'decrease quality twice as fast as an expired ordinary item',
+        description: 'decrease twice as fast as an expired ordinary item',
         itemName: CONJURED_MANA_CAKE,
         sellIn: 0,
         quality: 10,
@@ -213,6 +214,16 @@ describe('Gilded Rose', () => {
     it.each(cases)('$description', (testCase) => {
       expectUpdatedItem(testCase.itemName, testCase);
     });
+
+    it('does not apply to names that only contain Conjured', () => {
+      expectUpdatedItem(ITEM_CONTAINING_CONJURED, {
+        description: 'follows the ordinary item rule',
+        sellIn: 5,
+        quality: 10,
+        expectedSellIn: 4,
+        expectedQuality: 9,
+      });
+    });
   });
 
   describe('Sulfuras', () => {
@@ -228,6 +239,17 @@ describe('Gilded Rose', () => {
   });
 
   describe('inventory updates', () => {
+    it('mutates and returns the supplied inventory', () => {
+      const item = new Item(ORDINARY_ITEM, 5, 10);
+      const items = [item];
+
+      const updatedItems = new GildedRose(items).updateQuality();
+
+      expect(updatedItems).toBe(items);
+      expect(updatedItems[0]).toBe(item);
+      expect(item).toEqual(new Item(ORDINARY_ITEM, 4, 9));
+    });
+
     it('updates every item independently', () => {
       const items = [
         new Item(ORDINARY_ITEM, 5, 10),
