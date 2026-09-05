@@ -2,6 +2,8 @@ import { GildedRose, Item } from '@/gilded-rose';
 
 const AGED_BRIE = 'Aged Brie';
 const BACKSTAGE_PASS = 'Backstage passes to a TAFKAL80ETC concert';
+const CONJURED_ELIXIR = 'Conjured Elixir of the Mongoose';
+const CONJURED_MANA_CAKE = 'Conjured Mana Cake';
 const ORDINARY_ITEM = 'Ordinary Item';
 const SULFURAS = 'Sulfuras, Hand of Ragnaros';
 
@@ -161,6 +163,55 @@ describe('Gilded Rose', () => {
 
     it.each(cases)('$description', (testCase) => {
       expectUpdatedItem(BACKSTAGE_PASS, testCase);
+    });
+  });
+
+  describe('Conjured items', () => {
+    const cases: Array<UpdateCase & { itemName: string }> = [
+      {
+        description: 'decrease in quality by two before the sell date',
+        itemName: CONJURED_MANA_CAKE,
+        sellIn: 5,
+        quality: 10,
+        expectedSellIn: 4,
+        expectedQuality: 8,
+      },
+      {
+        description: 'apply to any item whose name starts with Conjured',
+        itemName: CONJURED_ELIXIR,
+        sellIn: 5,
+        quality: 10,
+        expectedSellIn: 4,
+        expectedQuality: 8,
+      },
+      {
+        description: 'decrease quality twice as fast as an expired ordinary item',
+        itemName: CONJURED_MANA_CAKE,
+        sellIn: 0,
+        quality: 10,
+        expectedSellIn: -1,
+        expectedQuality: 6,
+      },
+      {
+        description: 'never have negative quality before the sell-by date',
+        itemName: CONJURED_MANA_CAKE,
+        sellIn: 5,
+        quality: 1,
+        expectedSellIn: 4,
+        expectedQuality: 0,
+      },
+      {
+        description: 'never have negative quality after the sell-by date',
+        itemName: CONJURED_MANA_CAKE,
+        sellIn: 0,
+        quality: 3,
+        expectedSellIn: -1,
+        expectedQuality: 0,
+      },
+    ];
+
+    it.each(cases)('$description', (testCase) => {
+      expectUpdatedItem(testCase.itemName, testCase);
     });
   });
 

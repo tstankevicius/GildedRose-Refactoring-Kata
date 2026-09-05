@@ -12,6 +12,7 @@ export class Item {
 
 const AGED_BRIE = 'Aged Brie';
 const BACKSTAGE_PASS = 'Backstage passes to a TAFKAL80ETC concert';
+const CONJURED_PREFIX = 'Conjured ';
 const SULFURAS = 'Sulfuras, Hand of Ragnaros';
 const MINIMUM_QUALITY = 0;
 const MAXIMUM_QUALITY = 50;
@@ -40,6 +41,8 @@ export class GildedRose {
       this.updateAgedBrieQuality(item);
     } else if (item.name === BACKSTAGE_PASS) {
       this.updateBackstagePassQuality(item);
+    } else if (this.isConjured(item)) {
+      this.updateConjuredItemQuality(item);
     } else {
       this.updateOrdinaryItemQuality(item);
     }
@@ -47,8 +50,17 @@ export class GildedRose {
     item.sellIn -= 1;
   }
 
+  private isConjured(item: Item): boolean {
+    return item.name.indexOf(CONJURED_PREFIX) === 0;
+  }
+
   private updateOrdinaryItemQuality(item: Item): void {
     const degradation = item.sellIn <= 0 ? 2 : 1;
+    this.adjustQuality(item, -degradation);
+  }
+
+  private updateConjuredItemQuality(item: Item): void {
+    const degradation = item.sellIn <= 0 ? 4 : 2;
     this.adjustQuality(item, -degradation);
   }
 
