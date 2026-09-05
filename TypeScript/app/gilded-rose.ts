@@ -55,12 +55,16 @@ export class GildedRose {
   }
 
   private updateOrdinaryItemQuality(item: Item): void {
-    const degradation = item.sellIn <= 0 ? 2 : 1;
-    this.adjustQuality(item, -degradation);
+    this.degradeQuality(item, 1);
   }
 
   private updateConjuredItemQuality(item: Item): void {
-    const degradation = item.sellIn <= 0 ? 4 : 2;
+    this.degradeQuality(item, 2);
+  }
+
+  private degradeQuality(item: Item, baseDegradation: number): void {
+    const expirationMultiplier = item.sellIn <= 0 ? 2 : 1;
+    const degradation = baseDegradation * expirationMultiplier;
     this.adjustQuality(item, -degradation);
   }
 
